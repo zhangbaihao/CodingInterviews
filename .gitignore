@@ -16,7 +16,6 @@
 .suo
 # 忽略指定文件夹
 *.vs
-.vscode
 build
 
 
