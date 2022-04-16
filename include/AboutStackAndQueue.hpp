@@ -1,12 +1,5 @@
 ﻿#pragma once
-#include <map>
-#include <vector>
-#include <stack>
-#include <queue>
-#include <algorithm>
-#include <iostream>
-#include <sstream>
-using namespace std;
+#include"Util.h"
 // JZ31 栈的压入、弹出序列
 
 //[1,2,3,4,5],[4,5,3,2,1] true
@@ -94,44 +87,29 @@ class JZ59Solution
 {
 public:
     vector<int> maxInWindows(const vector<int> &nums, int size)
-    {
-        vector<int> maxValue;
-        int max = 0;
-        int i = 0;
-        queue<int> q;
-        for (int k = 0; k < size; k++)
-        {
-            if (nums[k] > max)
-                max = nums[k];
-            q.push(nums[k]);
-        }
-        maxValue.push_back(max);
-        i += size;
-        while (i < nums.size())
-        {
-            int front = q.front();
-            q.pop();
-            q.push(nums[i]);
-            if (nums[i] > max)
-            {
-                max = nums[i];
+    {    vector<int> ret;
+        if (nums.size() == 0 || size < 1 || nums.size() < size) 
+            return ret;
+        int n = nums.size();
+           deque<int> dq;
+           for (int i = 0; i < n; ++i) {
+               /*
+               如果arr[i+1] 已经大于了 arr[i], 那么还要arr[i]有什么用.
+               如果arr[i+1] < arr[i],显然arr[i]还是需要保留的。因为又可以arr[i] 对于下一个arr[i+1]所在的窗口来说，arr[i]已经失效了
+               */
+               while (!dq.empty() && nums[dq.back()] < nums[i]) {
+                   dq.pop_back();
+               }
+               dq.push_back(i);
+               // 判断队列的头部的下标是否过期
+               if (dq.front() + size <= i) {
+                   dq.pop_front();
             }
-            else
-            {
-                if (front == max)
-                {
-                    max = q.front();
-                    for (int k = 0; k < size; k++)
-                    {
-                        if (nums[i-k] > max)
-                            max = nums[i-k];
-                    }
-                }
-                
-            }
-            i++;
-            maxValue.push_back(max);
-        }
-        return maxValue;
-    }   
+            // 判断是否形成了窗口
+               if (i + 1 >= size) {
+                   ret.push_back(nums[dq.front()]);
+               }
+           }
+           return ret; 
+    }
 };

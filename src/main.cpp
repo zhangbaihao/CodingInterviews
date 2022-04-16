@@ -1,13 +1,21 @@
 ﻿#include <iostream>
-#include <vector>
-#include "AboutList.hpp"
-#include "AboutStackAndQueue.hpp"
+#include "AboutSearch.hpp"
+
 using namespace std;
 
 int main()
 {
-    JZ59Solution test;
-    vector<int> a({2,3,4,2,6,2,5,1});
-    test.maxInWindows(a,3);
+    cout << "main test" << endl;
+    JZ4Solution test;
+    vector<vector<int>> a;
+    vector<int> b1({1, 2, 8, 9});
+    vector<int> b2({2, 4, 9, 12});
+    vector<int> b3({4, 7, 10, 13});
+
+    // 1,[[1,2,8,9],[2,4,9,12],[4,7,10,13],[6,8,11,15]]
+    a.push_back(b1);
+    a.push_back(b2);
+    a.push_back(b3);
+    test.Find(1, a);
     return 0;
 }
