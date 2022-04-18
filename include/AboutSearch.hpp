@@ -117,3 +117,23 @@ public:
         return number%10;
     }
 };
+//JZ11 旋转数组的最小数字
+class JZ11Solution {
+public:
+    int minNumberInRotateArray(vector<int> rotateArray) {
+        int l = 0;
+        int r = rotateArray.size()-1;
+        while(l<r){
+            int mid = (l+r) / 2;
+            if(rotateArray[mid] > rotateArray[r]){
+                l = mid + 1;
+            }else if(rotateArray[mid] == rotateArray[r]){
+                r = r - 1;
+            }else {
+                r = mid;
+            }
+        }
+        return rotateArray[l];
+    }
+};
+dynamicProgramming
