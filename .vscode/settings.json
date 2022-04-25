@@ -16,6 +16,10 @@
         "utility": "cpp",
         "xhash": "cpp",
         "unordered_map": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "iterator": "cpp",
+        "xmemory": "cpp",
+        "set": "cpp",
+        "*.tcc": "cpp"
     }
 }
