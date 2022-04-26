@@ -2,12 +2,13 @@
 #include "AboutSearch.hpp"
 #include "AboutDynamicProgramming.hpp"
 #include "AboutBack.hpp"
+#include "AboutSimulation.hpp"
 using namespace std;
 int main()
 {
-    cout << "main test" << endl;
-    JZ13Solution test;
+    cout << "---Solution Call---" << endl;
+    JZ67Solution test;
     //4,12,12  15 我的22
-    cout<<test.movingCount(15,20,20);
+    cout<<test.StrToInt("82");
     return 0;
 }
