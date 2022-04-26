@@ -50,3 +50,49 @@ public:
         return false;
     }
 };
+// JZ13 机器人的运动范围
+// 10,1,100 返回值29
+//说明：
+/*[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[0,11],[0,12],
+[0,13],[0,14],[0,15],[0,16],[0,17],[0,18],[0,19],[0,20],[0,21],[0,22],[0,23],[0,24],
+[0,25],[0,26],[0,27],[0,28] 这29种，后面的[0,29],[0,30]以及[0,31]等等是无法到达的
+*/
+// 0≤threshold≤15 1≤rows,cols≤100
+class JZ13Solution
+{
+public:
+    int flags[100][100];
+    //int dx[4][2] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    //往右 下 左 上 走先
+    int dx[4][2] = {{0, 1},{1, 0},{0, -1},{-1, 0}};
+    void dfs(int threshold, int row, int col, int rows, int cols, int &count)
+    {
+        flags[row][col] = 1;
+        count = count + 1;
+        for (int j = 0; j < 4; j++)
+        {
+            int row_t = row + dx[j][0];
+            int col_t = col + dx[j][1];
+            if (col_t >= 0 && col_t < cols && row_t >= 0 && row_t < rows)
+            {
+                //这里还要防止往回走
+                if(flags[row_t][col_t] == 1)
+                    continue;
+                int rowSum = row_t % 10 + (row_t / 10) % 10;
+                int colSum = col_t % 10 + (col_t / 10) % 10;
+                //不能进入行坐标和列坐标的数位之和大于 threshold 的格子
+                if (rowSum + colSum > threshold)
+                {
+                    continue;
+                }
+                dfs(threshold, row_t, col_t, rows, cols, count);
+            }
+        }
+    }
+    int movingCount(int threshold, int rows, int cols)
+    {
+        int count = 0;
+        dfs(threshold, 0, 0, rows, cols, count);
+        return count;
+    }
+};

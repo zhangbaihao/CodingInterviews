@@ -6,4 +6,5 @@
 #include <algorithm>
 #include <sstream>
 #include <unordered_map>
+#include "string.h"
 using namespace std;
