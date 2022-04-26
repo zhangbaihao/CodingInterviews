@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿#include "Util.h"
 // JZ3 数组中重复的数字
 class JZ3Solution
@@ -96,62 +95,6 @@ public:
         
     }
 };
-=======
-﻿#include "Util.h"
-// JZ3 数组中重复的数字
-class JZ3Solution
-{
-public:
-    //[2,3,1,0,2,5,3] 2或者3
-    int duplicate(vector<int> &numbers)
-    {
-        // write code here
-        if (numbers.empty())
-            return -1;
-        int num = -1;
-        sort(numbers.begin(), numbers.end());
-        int size = numbers.size();
-        for (int i = 0; i < size - 1; i++)
-        {
-            if (numbers[i] == numbers[i + 1])
-            {
-                num = numbers[i];
-                return num;
-            }
-        }
-        return num;
-    }
-    int duplicate2(vector<int> &numbers)
-    {
-        if (numbers.empty())
-            return -1;
-        map<int, int> m;
-        int size = numbers.size();
-        int k1 = size - 1 / 2;
-        int k2 = size - 1 / 2 + 1;
-        for (int i = 0, j = size - 1; i < size && i < j; i++, j--)
-        {
-            m[numbers[i]]++;
-            m[numbers[j]]++;
-            if (m[numbers[i]] > 1)
-                return numbers[i];
-            if (m[numbers[j]] > 1)
-                return numbers[j];
-            if (k1 > i && k2 < j)
-            {
-                m[numbers[k1]]++;
-                m[numbers[k2]]++;
-                if (m[numbers[k1]] > 1)
-                    return numbers[k1];
-                if (m[numbers[k2]] > 1)
-                    return numbers[k2];
-                k1--;
-                k2++;
-            }
-        }
-        return -1;
-    }
-};
 // JZ51 数组中的逆序对
 /*
 描述
@@ -184,10 +127,7 @@ public:
         count = count % 1000000007;
         return count;
     }
-    class Solution
-    {
-    public:
-        int mod = 1000000007;
+    int mod = 1000000007;
         int mergeSort(int left, int right, vector<int> &data, vector<int> &temp)
         {
             //停止划分
@@ -225,7 +165,6 @@ public:
             vector<int> res(n);
             return mergeSort(0, n - 1, data, res);
         }
-    };
 };
 // JZ40 最小的K个数
 /*描述
@@ -375,4 +314,3 @@ class HeapSortSolution
         }
     }
 };
->>>>>>> f88ecb30f91fe4286d98420a5c1ec52652f012df
