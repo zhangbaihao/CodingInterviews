@@ -150,3 +150,76 @@ public:
         return res;
     }
 };
+//JZ20 表示数值的字符串
+/*科学计数法的数字(按顺序）可以分成以下几个部分:
+1.若干空格
+2.一个整数或者小数
+3.（可选）一个 'e' 或 'E' ，后面跟着一个整数(可正可负)
+4.若干空格
+
+小数（按顺序）可以分成以下几个部分：
+1.若干空格
+2.（可选）一个符号字符（'+' 或 '-'）
+3. 可能是以下描述格式之一:
+3.1 至少一位数字，后面跟着一个点 '.'
+3.2 至少一位数字，后面跟着一个点 '.' ，后面再跟着至少一位数字
+3.3 一个点 '.' ，后面跟着至少一位数字
+4.若干空格
+
+整数（按顺序）可以分成以下几个部分：
+1.若干空格
+2.（可选）一个符号字符（'+' 或 '-')
+3. 至少一位数字
+4.若干空格*/
+//例如，字符串["+100","5e2","-123","3.1416","-1E-16"]都表示数值。
+//但是["12e","1a3.14","1.2.3","+-5","12e+4.3"]都不是数值。
+class JZ20Solution{
+public:
+    int index = 0;
+    //有符号判断
+    bool integer(string& s){
+        if(index < s.length() && (s[index] == '-' || s[index] == '+'))
+            index++;
+        return unsigned_integer(s);
+    }
+    //无符号数判断
+    bool unsigned_integer(string& s){
+        int temp = index;
+        while(index < s.length() && (s[index] >= '0' && s[index] <= '9'))
+            index++;
+        return index > temp;
+    }
+    bool isNumeric(string str) {
+        //先判断空串
+        if(str.length() == 0)
+            return false;
+        //去除前面的空格
+        while(index < str.length() && str[index] == ' ')
+            index++;
+        int n = str.length() - 1;
+        //去除字符串后面的空格
+        while(n >= 0 && str[n] == ' ')
+            n--;
+        //限制的长度比下标1
+        n++;
+        //全是空格情况
+        if(n < index)
+            return false;
+        //判断前面的字符是否是有符号的整数
+        bool flag = integer(str);
+        //如果有小数点
+        if(index < n && str[index] == '.'){
+            index++;
+            //小数点前后有无数字可选
+            flag = unsigned_integer(str) || flag; 
+        }
+        //如果有e
+        if(index < n && (str[index] == 'e' || str[index] == 'E')){
+            index++;
+            //e后面必须全是整数
+            flag = flag && integer(str);
+        }
+        //是否字符串遍历结束
+        return flag && (index == n);
+    }
+};
