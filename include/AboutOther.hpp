@@ -477,7 +477,7 @@ public:
 class JZ83Solution {
 public:
     long long mod = 998244353;
-    //快速乘法
+    //快速乘法 5*7= 5*(0000 0111) = 5*（4+2+1）
     long long fast(long long x, long long y){ 
         long long res = 0;
         x %= mod;
@@ -496,7 +496,7 @@ public:
         }
         return res;
     }
-    //快速幂
+    //快速幂 7的二进制 0000 0111   5的7次方 = 5*(5*5)*(5*5*5*5) 
     long long Pow(long long x, long long y){ 
         long long res = 1;
         while(y){
