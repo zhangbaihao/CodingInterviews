@@ -104,3 +104,137 @@ public:
         return treeNode;
     }
 };
+
+//JZ27 二叉树的镜像
+class JZ27Solution {
+public:
+    TreeNode* Mirror(TreeNode* pRoot) {
+        // write code here
+        if(!pRoot)
+            return pRoot;
+        TreeNode* temp = pRoot->left;
+        pRoot->left = Mirror(pRoot->right);
+        pRoot->right = Mirror(temp);
+        return pRoot;
+    }
+};
+
+//JZ32 从上往下打印二叉树
+class JZ32Solution {
+public:
+    vector<int> PrintFromTopToBottom(TreeNode* root) {
+        vector<int> res;
+        if(!root)
+            return res;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty()){
+            TreeNode* front = q.front();
+            q.pop();
+            if(!front)
+                continue;
+            res.push_back(front->val);
+            q.push(front->left);
+            q.push(front->right);
+        }
+        return res;
+    }
+};
+
+//JZ33 二叉搜索树的后序遍历序列
+class JZ33Solution {
+public:
+    //输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+    //如果是则返回 true ,否则返回 false 。假设输入的数组的任意两个数字都互不相同
+    //sequence[end] 后续遍历根节点是最后一个结点
+    bool Verify(vector<int> sequence,int start,int end){
+        if(start>=end)
+            return true;
+        int k = start;
+        //找到第一个比根节点大的结点 从此节点到根节点皆为右子树
+        while(k<end && sequence[k]<sequence[end]){
+            k++;
+        }
+        for(int i=k;i<end;i++){
+            if(sequence[i]<sequence[end])
+                return false;
+        }
+        return Verify(sequence,start,k-1) && Verify(sequence,k,end-1);
+    }
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        if(sequence.empty())
+            return false;
+        if(sequence.size() == 1)
+            return true;
+        return Verify(sequence,0,sequence.size()-1);
+    }
+};
+//JZ82 二叉树中和为某一值的路径(一)
+class JZ82Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        // write code here
+        if(!root)
+            return false;
+        sum -= root->val;
+        if(!root->left && !root->right && sum == 0)
+            return true;
+        return hasPathSum(root->left,sum) || hasPathSum(root->right,sum);
+    }
+};
+//JZ34 二叉树中和为某一值的路径(二)
+class JZ34Solution {
+public:
+    vector<vector<int>> res;
+    void FindOnePath(vector<int> temp,TreeNode* root,int expectNumber){
+        if(!root)
+            return ;
+        temp.push_back(root->val);
+        //这里需要到叶子结点
+        if(!root->left && !root->right && expectNumber == root->val)
+            res.push_back(temp);
+        else{
+            FindOnePath(temp,root->left,expectNumber-root->val);
+            FindOnePath(temp,root->right,expectNumber-root->val);
+        }
+        temp.pop_back();
+    }
+    vector<vector<int>> FindPath(TreeNode* root,int expectNumber) {
+        vector<int> temp;
+        FindOnePath(temp,root,expectNumber);
+        return res;
+    }
+};
+
+//JZ36 二叉搜索树与双向链表
+class JZ36Solution {
+public:
+ TreeNode* Convert(TreeNode* pRootOfTree)
+    {
+        if(pRootOfTree == nullptr) return nullptr;
+        stack<TreeNode*> st;
+        vector<TreeNode*> result;
+        TreeNode* head = nullptr,*pre = nullptr;
+        while( !st.empty() || pRootOfTree != nullptr){
+            while(pRootOfTree != nullptr){
+                st.push(pRootOfTree);
+                pRootOfTree = pRootOfTree->left;
+            }
+            if( !st.empty()){
+                pRootOfTree = st.top();
+                st.pop();
+              if(pre == nullptr){//表示第一次出栈，为最左值，记录下最小的元素
+                  head = pRootOfTree;
+              }
+              else{
+                  pre->right = pRootOfTree;
+                  pRootOfTree->left = pre;
+               }
+
+                pre = pRootOfTree;
+                pRootOfTree = pRootOfTree->right;
+            }
+        }
+        return head;
+    }
+};
