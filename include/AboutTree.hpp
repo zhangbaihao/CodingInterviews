@@ -43,8 +43,8 @@ public:
                 q.pop();
                 if (!tmp)
                     continue;
-                q.push(pRoot->left);
-                q.push(pRoot->right);
+                q.push(tmp->left);
+                q.push(tmp->right);
                 if (level % 2 == 0)
                 {
                     arr.push_back(tmp->val);
@@ -59,5 +59,48 @@ public:
                 res.push_back(arr);
         }
         return res;
+    }
+};
+
+//JZ54 二叉搜索树的第k个节点
+class JZ54Solution {
+public:
+    stack<int> q;
+    int KthNode(TreeNode* proot, int k) {
+        // write code here
+        if(!proot || k<=0)
+            return -1;
+        KthNode(proot->left,k);
+        if(q.size()<k)
+            q.push(proot->val);
+        //这里不加也行，但是没必要
+        if(q.size()<k)
+            KthNode(proot->right,k);
+        if(q.size() == k)
+        {
+            return q.top();
+        }else{
+            return -1;
+        }
+    }
+};
+//JZ7 重建二叉树
+class JZ7Solution {
+public:
+    TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) {
+        if(pre.size() == 0 || vin.size() ==0)
+            return nullptr;
+        TreeNode *treeNode = new TreeNode(pre[0]);
+        //从中序中找到根节点，前序遍历第一个为根结点
+        int mid = distance(begin(vin),find(vin.begin(),vin.end(),pre[0]));
+        vector<int> left_pre(pre.begin()+1,pre.begin()+mid+1);
+        vector<int> right_pre(pre.begin()+mid+1,pre.end());
+        vector<int> left_vin(vin.begin(),vin.begin()+mid);
+        vector<int> right_vin(vin.begin()+mid+1,vin.end());
+         
+        treeNode->left = reConstructBinaryTree(left_pre, left_vin);
+         
+        treeNode->right = reConstructBinaryTree(right_pre, right_vin);
+        return treeNode;
     }
 };
