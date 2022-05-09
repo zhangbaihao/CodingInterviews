@@ -389,66 +389,199 @@ public:
         return res;
     }
 };
-//JZ37 序列化二叉树
-class Solution {
+// JZ37 序列化二叉树
+class JZ37Solution
+{
 public:
-
-    char* Serialize(TreeNode *root) {    
-        
-    }
-    //{1,2,3,#,#,6,7} 转成二叉树
-    TreeNode* Deserialize(char *str) {
-    
-    }
-};
-/*
-struct TreeNode {
-    int val;
-    struct TreeNode *left;
-    struct TreeNode *right;
-    TreeNode(int x) :
-            val(x), left(NULL), right(NULL) {
-    }
-};
-*/
-class Solution {
-public:
-    string SerializeCore(TreeNode* root){
-        if(root == nullptr){
+    string SerializeCore(TreeNode *root)
+    {
+        if (!root)
             return "#!";
-        }
-        string str;
-        str = to_string(root->val) + "!";
+        string str = "";
+        str = std::to_string(root->val) + "!";
         str += SerializeCore(root->left);
         str += SerializeCore(root->right);
         return str;
     }
-    char* Serialize(TreeNode* root) {
+    char *Serialize(TreeNode *root)
+    {
         string str = SerializeCore(root);
-        char *res = new char[str.size()];
-        for(int i = 0; i<str.size(); i++){
+        char *res = new char[str.length()];
+        for (int i = 0; i < str.length(); i++)
             res[i] = str[i];
-        }
         return res;
     }
-    //反序列化字符串 重建二叉树
-    TreeNode* DeserializeCore(char* &str){
-        if(*str == '#'){
+    //{1,2,3,#,#,6,7} 转成二叉树
+    TreeNode *DeserializeCore(char *&str)
+    {
+        if (*str == '#')
+        {
             str++;
             return nullptr;
         }
-        
+
         int num = 0;
-        while(*str != '!'){
-            num = num*10 + *str - '0';
-            str++; 
+        while (*str != '!')
+        {
+            num = num * 10 + *str - '0';
+            str++;
         }
         TreeNode *node = new TreeNode(num);
         node->left = DeserializeCore(++str);
         node->right = DeserializeCore(++str);
         return node;
     }
-    TreeNode* Deserialize(char* str) {
+    TreeNode *Deserialize(char *str)
+    {
         return DeserializeCore(str);
+    }
+};
+// JZ84 二叉树中和为某一值的路径(三)
+class JZ84Solution
+{
+public:
+    int key = 0;
+    void dfs(TreeNode *root, int sum)
+    {
+        if (!root)
+            return;
+        sum -= root->val;
+        if (sum == 0)
+            key++;
+        dfs(root->left, sum);
+        dfs(root->right, sum);
+    }
+    int FindPath(TreeNode *root, int sum)
+    {
+        // write code here
+        if (!root)
+            return key;
+        /*找当前结点*/
+        dfs(root, sum);
+        FindPath(root->left, sum);
+        FindPath(root->right, sum);
+        return key;
+    }
+};
+
+// JZ86 在二叉树中找到两个节点的最近公共祖先
+class JZ86Solution
+{
+public:
+    int lowestCommonAncestor(TreeNode *root, int o1, int o2)
+    {
+        // write code here
+        if (root->val == o1)
+            return o1;
+        else if (root->val == o2)
+            return o2;
+        queue<TreeNode *> q;
+        q.push(root);
+
+        unordered_map<int, int> father;
+        map<int, int> depth;
+        father[root->val] = root->val;
+        int n = 0;
+        while (!q.empty())
+        {
+            int size = q.size();
+            n++;
+            while (size--)
+            {
+                TreeNode *temp = q.front();
+                q.pop();
+                if (temp->left)
+                {
+                    q.push(temp->left);
+                    father[temp->left->val] = temp->val;
+                }
+                if (temp->right)
+                {
+                    q.push(temp->right);
+                    father[temp->right->val] = temp->val;
+                }
+                depth[temp->val] = n;
+            }
+        }
+        while (o1 != o2)
+        {
+            if (depth[o1] > depth[o2])
+            {
+                o1 = father[o1];
+            }
+            else if (depth[o1] < depth[o2])
+            {
+                o2 = father[o2];
+            }
+            else
+            {
+                o1 = father[o1];
+                o2 = father[o2];
+            }
+        }
+        return o1;
+    }
+    int lowestCommonAncestor2(TreeNode* root, int o1, int o2) {
+        // 记录每个节点的父亲
+        unordered_map<int, int> f;
+        // 记录bfs队列
+        queue<TreeNode*> q;
+        q.push(root);
+
+        // 找到o1和o2的父节点就可以停止了
+        while (!f[o1] || !f[o2]) {
+            TreeNode* cur = q.front();
+            q.pop();
+            TreeNode *l = cur->left; 
+            TreeNode *r = cur->right;
+
+            // 如果当前点有左孩子，那么记录下左孩子的父子关系，并且加入队列
+            if (l) 
+                f[l->val] = cur->val, q.push(l);
+
+            // 右侧对称
+            if (r) 
+                f[r->val] = cur->val, q.push(r);
+        }
+
+        // path记录root到o1的路径，无序即可
+        unordered_set<int> path;
+        while (f[o1]) {
+            path.insert(o1);
+            o1 = f[o1];
+        }
+
+        // 找到o2到root的路径中，第一个跟path有交集的点，即为答案
+        while (path.find(o2) == path.end() && o2 != root->val) {
+            o2 = f[o2];
+        }
+
+        return o2;
+    }
+};
+
+
+// JZ68 二叉搜索树的最近公共祖先
+class JZ68Solution
+{
+public:
+    int lowestCommonAncestor(TreeNode *root, int p, int q)
+    {
+        while (1)
+        {
+            if (root->val > p && root->val > q)
+            {
+                root = root->left;
+            }
+            else if (root->val < p && root->val < q)
+            {
+                root = root->right;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return root->val;
     }
 };
