@@ -8,36 +8,33 @@ public:
     //子数组[3,10,-4,7,2]可以求得最大和为18
     int FindGreatestSumOfSubArray(vector<int> array)
     {
-        int now = 0;
-        int ans = INT_MIN;
+        int now = 0;             //表示当前累加和，要是<0 前面都可以不需要了
+        int max_value = INT_MIN; //用来保存最大值
         for (int i = 0; i < array.size(); i++)
-        {
-            if (now < 0) // now<0,则舍去前面的
+        { // now<0,则舍去前面的
+            if (now < 0)
                 now = array[i];
             else
             {
                 now += array[i]; //比0大则直接加上去
             }
-            ans = max(now, ans); //更新ans
+            max_value = max(now, max_value); //更新最大值
         }
-        return ans;
+        return max_value;
     }
     //动态规划 dp[n]为以第n个数为结尾，得到的子数组的和的最大值
     int FindGreatestSumOfSubArray2(vector<int> array)
-    {
-        int n = array.size();
+    {   
+        int size = array.size();
+        //dp[i] 第i个数时最大合
         vector<int> dp;
         dp.push_back(array[0]);
-        // 初始化
-        int ans = dp[0];
-        for (int i = 1; i < n; i++)
-        {
-            // 根据状态转移公式进行状态转移
-            dp.push_back(max(array[i], dp[i - 1] + array[i]));
-            // 维护最终的答案
-            ans = max(ans, dp[i]);
+        int max_value = dp[0];
+        for(int i=1;i<size;i++){
+            dp.push_back(max(array[i],dp[i-1]+ array[i]));
+            max_value = max(max_value,dp[i]);
         }
-        return ans;
+        return max_value;
     }
 };
 // JZ85 连续子数组的最大和(二)
@@ -303,17 +300,17 @@ public:
     {
         // write code here
         // dp[i] 代表第i个数字的solve最大数量
-        int dp[91]= {0};
+        int dp[91] = {0};
         dp[0] = 1;
         int length = nums.length();
         for (int i = 0; i < length; i++)
         {
             if (nums[i] != '0')
             {
-                dp[i+1] += dp[i];
+                dp[i + 1] += dp[i];
             }
-            if (i>0 && nums[i-1] != '0' && (nums[i - 1] - '0') * 10 + (nums[i] - '0') <= 26)
-                dp[i+1] += dp[i-1];
+            if (i > 0 && nums[i - 1] != '0' && (nums[i - 1] - '0') * 10 + (nums[i] - '0') <= 26)
+                dp[i + 1] += dp[i - 1];
         }
         return dp[length];
     }

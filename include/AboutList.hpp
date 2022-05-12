@@ -152,7 +152,7 @@ public:
         return nullptr;
     }
 
-    ListNode *EntryNodeOfLoop(ListNode *pHead)
+    ListNode *EntryNodeOfLoop2(ListNode *pHead)
     {
         if (!pHead->next || !pHead->next->next)
             return nullptr;

@@ -9,7 +9,7 @@ using namespace std;
 int main()
 {
     cout << "---Solution Call---" << endl;
-    JZ62Solution test;
-    cout<<test.LastRemaining_Solution(6,6);
+    JZ44Solution test;
+    cout<<test.findNthDigit(500000000);
     return 0;
 }
