@@ -3,47 +3,39 @@
 class JZ12Solution
 {
 public:
-    bool dfs(vector<vector<char>> matrix, int i, int row, int col, string str)
+    // k代表走过的路程大小，从(row,col)点走
+    bool dfs(vector<vector<char>> matrix, string word, int k, int row, int col)
     {
-        //先找到入口
-        if (matrix[row][col] != str[i])
-            return false;       //没找到入口，返回
-        matrix[row][col] = '*'; //把每次成功找到的走过的路径上的字符设置为*；防止str中存在重复的元素
-        i++;                    //每一次找到了之后，i=i+1
-
-        //找到对应的值之后，找出口
-        if (i == str.size())
-            return true; //当找到的路径数目等于字符长度，那么说明路径已经找到了
-
-        //设置偏移量，要么向上要么向下要么向左要么向右
-        int dx[4][2] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}}; //分别是向左 向右 向上 向下
-        for (int j = 0; j < 4; j++)                        //每次可以有四个方向进行移动
+        if (matrix[row][col] != word[k])
+            return false;
+        //把每次成功找到的走过的路径上的字符设置为*；防止str中存在重复的元素
+        matrix[row][col] = '#';
+        k++;
+        //当找到的路径数目等于字符长度，那么说明路径已经找到了
+        if (k == word.size())
+            return true;
+        //定义四个方向坐标 {上下,左右}
+        int dirct[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int i = 0; i < 4; i++)
         {
-            row = row + dx[j][0];
-            col = col + dx[j][1];
-            if (row >= 0 && row < matrix.size() && col >= 0 && col < matrix[0].size())
-            {
-                if (dfs(matrix, i, row, col, str))
-                { //找到了
+            //从x y往上下左右四个方向走
+            int row1 = row + dirct[i][0];
+            int col1 = col + dirct[i][1];
+            if (col1 >= 0 && col1 < matrix[0].size() && row1 >= 0 && row1 < matrix.size())
+                if (dfs(matrix, word, k, row1, col1))
                     return true;
-                }
-            }
-            row = row - dx[j][0]; //当超出边界，返回现场；当移动之后没找到，返回现场
-            col = col - dx[j][1];
         }
-        //如果没找到
         return false;
     }
     bool hasPath(vector<vector<char>> &matrix, string word)
     {
-        // write code here
-        int rowLen = matrix.size();    //行数
-        int colLen = matrix[0].size(); //列数
-        for (int i = 0; i < rowLen; i++)
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        for (int i = 0; i < rows; i++)
         {
-            for (int j = 0; j < colLen; j++)
+            for (int j = 0; j < cols; j++)
             {
-                if (dfs(matrix, 0, i, j, word))
+                if (dfs(matrix, word, 0, i, j))
                     return true;
             }
         }
@@ -62,9 +54,8 @@ class JZ13Solution
 {
 public:
     int flags[100][100];
-    //int dx[4][2] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-    //往右 下 左 上 走先
-    int dx[4][2] = {{0, 1},{1, 0},{0, -1},{-1, 0}};
+    //往              右       下      左        上
+    int dx[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
     void dfs(int threshold, int row, int col, int rows, int cols, int &count)
     {
         flags[row][col] = 1;
@@ -76,7 +67,7 @@ public:
             if (col_t >= 0 && col_t < cols && row_t >= 0 && row_t < rows)
             {
                 //这里还要防止往回走
-                if(flags[row_t][col_t] == 1)
+                if (flags[row_t][col_t] == 1)
                     continue;
                 int rowSum = row_t % 10 + (row_t / 10) % 10;
                 int colSum = col_t % 10 + (col_t / 10) % 10;

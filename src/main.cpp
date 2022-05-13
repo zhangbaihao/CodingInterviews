@@ -9,7 +9,14 @@ using namespace std;
 int main()
 {
     cout << "---Solution Call---" << endl;
-    JZ44Solution test;
-    cout<<test.findNthDigit(500000000);
+    JZ47Solution test;
+    vector<vector<int>> s;
+    vector<int> a1({1,3,1});
+    vector<int> a2({1,5,1});
+    vector<int> a3({4,2,1});
+    s.push_back(a1);
+    s.push_back(a2);
+    s.push_back(a3);
+    cout<<test.maxValue(s);
     return 0;
 }
