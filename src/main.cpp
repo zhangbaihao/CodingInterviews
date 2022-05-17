@@ -6,17 +6,38 @@
 #include "AboutBack.hpp"
 #include "AboutSimulation.hpp"
 using namespace std;
+int dp[35][35] = {0};
+bool isMatch(string s, string p)
+{
+    int len1 = s.length();
+    int len2 = p.length();
+    dp[0][0] = 1;
+    for (int i = 0; i <= len1; i++)
+    {
+        for (int j = 1; j <= len2; j++)
+        {
+            if (j >= 2 && p[j - 1] == '*')
+            {
+                if (i > 0 && p[j - 2] == s[i - 1] || p[j - 2] == '.')
+                {
+                    dp[i][j] |= dp[i - 1][j];
+                }
+                dp[i][j] |= dp[i][j - 2];
+            }
+            else if (p[j - 1] == s[i - 1] || p[j - 1] == '.')
+            {
+                if (i > 0)
+                    dp[i][j] = dp[i - 1][j - 1];
+            }
+        }
+    }
+    return dp[len1][len2] == 1;
+}
+
 int main()
 {
     cout << "---Solution Call---" << endl;
-    JZ47Solution test;
-    vector<vector<int>> s;
-    vector<int> a1({1,3,1});
-    vector<int> a2({1,5,1});
-    vector<int> a3({4,2,1});
-    s.push_back(a1);
-    s.push_back(a2);
-    s.push_back(a3);
-    cout<<test.maxValue(s);
+    JZ20Solution test;
+    test.isNumeric2("+1");
     return 0;
 }

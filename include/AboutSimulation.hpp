@@ -98,8 +98,8 @@ public:
 3.判断整数的有效部分：
 3.1 确定符号位之后，与之后面尽可能多的连续数字组合起来成为有效整数数字，如果没有有效的整数部分，那么直接返回0
 3.2 将字符串前面的整数部分取出，后面可能会存在存在多余的字符(字母，符号，空格等)，这些字符可以被忽略，它们对于函数不应该造成影响
-3.3  整数超过 32 位有符号整数范围 [−231,  231 − 1] ，需要截断这个整数，使其保持在这个范围内。
-具体来说，小于 −231的整数应该被调整为 −231 ，大于 231 − 1 的整数应该被调整为 231 − 1
+3.3  整数超过 32 位有符号整数范围 [−2^31,  2^31 − 1] ，需要截断这个整数，使其保持在这个范围内。
+具体来说，小于 −2^31的整数应该被调整为 −2^31 ，大于 2^31 − 1 的整数应该被调整为 2^31 − 1
 4.去掉无用的后导空格*/
 // JZ67 把字符串转换成整数(atoi)
 class JZ67Solution
@@ -141,7 +141,7 @@ public:
                 break;
             //处理越界
             res = res * 10 + sign * (c - '0');
-            if (res >= INT_MAX )
+            if (res >= INT_MAX)
                 return INT_MAX;
             if (res <= INT_MIN)
                 return INT_MIN;
@@ -150,7 +150,7 @@ public:
         return res;
     }
 };
-//JZ20 表示数值的字符串
+// JZ20 表示数值的字符串
 /*科学计数法的数字(按顺序）可以分成以下几个部分:
 1.若干空格
 2.一个整数或者小数
@@ -173,50 +173,56 @@ public:
 4.若干空格*/
 //例如，字符串["+100","5e2","-123","3.1416","-1E-16"]都表示数值。
 //但是["12e","1a3.14","1.2.3","+-5","12e+4.3"]都不是数值。
-class JZ20Solution{
+class JZ20Solution
+{
 public:
     int index = 0;
     //有符号判断
-    bool integer(string& s){
-        if(index < s.length() && (s[index] == '-' || s[index] == '+'))
+    bool integer(string &s)
+    {
+        if (index < s.length() && (s[index] == '-' || s[index] == '+'))
             index++;
         return unsigned_integer(s);
     }
     //无符号数判断
-    bool unsigned_integer(string& s){
+    bool unsigned_integer(string &s)
+    {
         int temp = index;
-        while(index < s.length() && (s[index] >= '0' && s[index] <= '9'))
+        while (index < s.length() && (s[index] >= '0' && s[index] <= '9'))
             index++;
         return index > temp;
     }
-    bool isNumeric(string str) {
+    bool isNumeric(string str)
+    {
         //先判断空串
-        if(str.length() == 0)
+        if (str.length() == 0)
             return false;
         //去除前面的空格
-        while(index < str.length() && str[index] == ' ')
+        while (index < str.length() && str[index] == ' ')
             index++;
         int n = str.length() - 1;
         //去除字符串后面的空格
-        while(n >= 0 && str[n] == ' ')
+        while (n >= 0 && str[n] == ' ')
             n--;
-        //限制的长度比下标1
+        //限制的长度应该是有效下标后一位
         n++;
         //全是空格情况
-        if(n < index)
+        if (n < index)
             return false;
         //判断前面的字符是否是有符号的整数
         bool flag = integer(str);
         //如果有小数点
-        if(index < n && str[index] == '.'){
+        if (index < n && str[index] == '.')
+        {
             index++;
             //小数点前后有无数字可选
-            flag = unsigned_integer(str) || flag; 
+            flag = unsigned_integer(str) || flag;
         }
         //如果有e
-        if(index < n && (str[index] == 'e' || str[index] == 'E')){
+        if (index < n && (str[index] == 'e' || str[index] == 'E'))
+        {
             index++;
-            //e后面必须全是整数
+            // e后面必须全是整数
             flag = flag && integer(str);
         }
         //是否字符串遍历结束

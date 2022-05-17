@@ -176,19 +176,18 @@ public:
         {
             for (int j = 1; j <= len2; j++)
             {
-                //这里题目好像保证了输入*一定不会出现在pattern第1个字符但还是j>=2 好一些
-                if (j >= 2 && pattern[j - 1] == '*')
+                //正常字符匹配
+                if (i > 0 && pattern[j - 1] == '.' || pattern[j - 1] == str[i - 1])
+                { //如果模式串字符与str字符匹配,和如果模式串字符为.,则dp[i][j]=dp[i-1][j-1]
+                    dp[i][j] = dp[i - 1][j - 1];
+                }//这里题目好像保证了输入*一定不会出现在pattern第1个字符但还是j>=2 好一些
+                else if (j >= 2 && pattern[j - 1] == '*')
                 {
                     if (i > 0 && pattern[j - 2] == '.' || pattern[j - 2] == str[i - 1])
                     {
                         dp[i][j] = dp[i - 1][j]; //*用了至少1次 则应该跟少一个字符dp相等
                     }
                     dp[i][j] |= dp[i][j - 2]; //字符 *号 使用0次
-                }
-                else if (pattern[j - 1] == '.' || pattern[j - 1] == str[i - 1])
-                { //如果模式串字符与str字符匹配,和如果模式串字符为.,则dp[i][j]=dp[i-1][j-1]
-                    if (i > 0)
-                        dp[i][j] = dp[i - 1][j - 1];
                 }
             }
         }
@@ -289,7 +288,7 @@ public:
         }
         return dp[n][m];
     }
-    int maxValue(vector<vector<int>> &grid)
+    int maxValue2(vector<vector<int>> &grid)
     {
         // dp[x][y] 代表第x行 y列时礼物的最大值
         int dp[201][201] = {0};
@@ -371,12 +370,12 @@ public:
         int length = nums.length();
         for (int i = 1; i <= length; i++)
         {
-            if (nums[i-1] != '0')
+            if (nums[i - 1] != '0')
             {
-                dp[i] += dp[i-1];
+                dp[i] += dp[i - 1];
             }
-            //i-1代表nums当前字符,下标i-2上一个数字，考虑是否能和当前数字结合<=26(z)
-            if (i >= 2 && nums[i - 2] != '0' && (nums[i - 2] - '0') * 10 + (nums[i-1] - '0') <= 26)
+            // i-1代表nums当前字符,下标i-2上一个数字，考虑是否能和当前数字结合<=26(z)
+            if (i >= 2 && nums[i - 2] != '0' && (nums[i - 2] - '0') * 10 + (nums[i - 1] - '0') <= 26)
                 dp[i] += dp[i - 2];
         }
         return dp[length];

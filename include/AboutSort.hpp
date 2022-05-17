@@ -53,7 +53,7 @@ public:
         return -1;
     }
 };
-//JZ51 数组中的逆序对
+// JZ51 数组中的逆序对
 /*
 描述
 在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。
@@ -63,16 +63,21 @@ public:
 要求：空间复杂度 O(n)O(n)，时间复杂度 O(nlogn)O(nlogn)
 输入描述：题目保证输入的数组中没有的相同的数字
 */
-class JZ51sSolution {
+class JZ51sSolution
+{
 public:
     //[1,2,3,4,5,6,7,0]
-    //7
-    int InversePairs(vector<int> data) {
+    // 7
+    int InversePairs(vector<int> data)
+    {
         int size = data.size();
         int count = 0;
-        for(int i=0;i<size;i++){
-            for(int j=size-1;j>i;j--){
-                if(data[i]>data[j]){
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = size - 1; j > i; j--)
+            {
+                if (data[i] > data[j])
+                {
                     count++;
                 }
             }
@@ -81,18 +86,19 @@ public:
         return count;
     }
 };
-//JZ40 最小的K个数
+// JZ40 最小的K个数
 /*描述
 给定一个长度为 n 的可能有重复值的数组，找出其中不去重的最小的 k 个数。
 例如数组元素是4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4(任意顺序皆可)。
 数据范围：0≤k,n≤10000，数组中每个数的大小 0≤val≤1000
 要求：空间复杂度 O(n) ，时间复杂度 O(nlogn)*/
-class JZ40Solution {
+class JZ40Solution
+{
 public:
-    //[4,5,1,6,2,7,3,8],4 
-    //1 2 3 4 返回最小的4个数即可，返回[1,3,2,4]也可以  
-    vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
-        
+    //[4,5,1,6,2,7,3,8],4
+    // 1 2 3 4 返回最小的4个数即可，返回[1,3,2,4]也可以
+    vector<int> GetLeastNumbers_Solution(vector<int> input, int k)
+    {
     }
 };
 // JZ51 数组中的逆序对
@@ -128,43 +134,43 @@ public:
         return count;
     }
     int mod = 1000000007;
-        int mergeSort(int left, int right, vector<int> &data, vector<int> &temp)
+    int mergeSort(int left, int right, vector<int> &data, vector<int> &temp)
+    {
+        //停止划分
+        if (left >= right)
+            return 0;
+        //取中间
+        int mid = (left + right) / 2;
+        //左右划分合并
+        int res = mergeSort(left, mid, data, temp) + mergeSort(mid + 1, right, data, temp);
+        //防止溢出
+        res %= mod;
+        int i = left, j = mid + 1;
+        for (int k = left; k <= right; k++)
+            temp[k] = data[k];
+        for (int k = left; k <= right; k++)
         {
-            //停止划分
-            if (left >= right)
-                return 0;
-            //取中间
-            int mid = (left + right) / 2;
-            //左右划分合并
-            int res = mergeSort(left, mid, data, temp) + mergeSort(mid + 1, right, data, temp);
-            //防止溢出
-            res %= mod;
-            int i = left, j = mid + 1;
-            for (int k = left; k <= right; k++)
-                temp[k] = data[k];
-            for (int k = left; k <= right; k++)
+            // mid左边已经全部排进data，只剩下右边，且不会再出现逆序对
+            if (i == mid + 1)
+                data[k] = temp[j++];
+            else if (j == right + 1 || temp[i] <= temp[j])
+                data[k] = temp[i++];
+            //左边temp[i]>temp[j]则区间[i]-[mid]都比右边[j]大,，答案增加
+            else
             {
-                // mid左边已经全部排进data，只剩下右边，且不会再出现逆序对
-                if (i == mid + 1)
-                    data[k] = temp[j++];
-                else if (j == right + 1 || temp[i] <= temp[j])
-                    data[k] = temp[i++];
-                //左边temp[i]>temp[j]则区间[i]-[mid]都比右边[j]大,，答案增加
-                else
-                {
-                    data[k] = temp[j++];
-                    //统计逆序对
-                    res += mid - i + 1;
-                }
+                data[k] = temp[j++];
+                //统计逆序对
+                res += mid - i + 1;
             }
-            return res % mod;
         }
-        int InversePairs(vector<int> data)
-        {
-            int n = data.size();
-            vector<int> res(n);
-            return mergeSort(0, n - 1, data, res);
-        }
+        return res % mod;
+    }
+    int InversePairs(vector<int> data)
+    {
+        int n = data.size();
+        vector<int> res(n);
+        return mergeSort(0, n - 1, data, res);
+    }
 };
 // JZ40 最小的K个数
 /*描述
@@ -242,6 +248,9 @@ public:
         {
             datas.push_back(num);
             return;
+        }else if(size == 0){
+            datas.push_back(num);
+            return;
         }
 
         for (int i = 0; i < size; i++)
@@ -252,7 +261,6 @@ public:
                 return;
             }
         }
-        datas.insert(datas.begin() + size, num);
     }
 
     double GetMedian()

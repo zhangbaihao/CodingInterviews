@@ -113,13 +113,38 @@ public:
         for (int x : array)
         {
             if (m & x)
-                ans[1] ^= x;
+                ans[1] ^= x; // 7:0111
             else
-                ans[0] ^= x; // 2:0010 2:0010
+                ans[0] ^= x; // 2:0010 2:0010 3:0011
         }
         //交换结果集
         if (ans[0] > ans[1])
             swap(ans[0], ans[1]);
+        return ans;
+    }
+    vector<int> FindNumsAppearOnc2(vector<int> &array)
+    {
+        //答案数组
+        vector<int> ans(2);
+        int x = 0;
+        //只剩下两个出现一次数的异或结果x
+        for (auto i : array)
+        {
+            x ^= i;
+        }
+        int m = 1;
+        while (!(m & x))
+        {
+            m <<= 1;
+        }
+        for (auto i : array)
+        {
+            if(m & i){
+                ans[0] ^= i;
+            }else{
+                ans[1] ^= i;
+            }
+        }
         return ans;
     }
 };
