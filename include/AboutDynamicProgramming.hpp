@@ -177,13 +177,13 @@ public:
             for (int j = 1; j <= len2; j++)
             {
                 //正常字符匹配
-                if (i > 0 && pattern[j - 1] == '.' || pattern[j - 1] == str[i - 1])
+                if (i > 0 && (pattern[j - 1] == '.' || pattern[j - 1] == str[i - 1]))
                 { //如果模式串字符与str字符匹配,和如果模式串字符为.,则dp[i][j]=dp[i-1][j-1]
                     dp[i][j] = dp[i - 1][j - 1];
                 }//这里题目好像保证了输入*一定不会出现在pattern第1个字符但还是j>=2 好一些
                 else if (j >= 2 && pattern[j - 1] == '*')
                 {
-                    if (i > 0 && pattern[j - 2] == '.' || pattern[j - 2] == str[i - 1])
+                    if (i > 0 && (pattern[j - 2] == '.' || pattern[j - 2] == str[i - 1]))
                     {
                         dp[i][j] = dp[i - 1][j]; //*用了至少1次 则应该跟少一个字符dp相等
                     }
