@@ -37,7 +37,7 @@ bool isMatch(string s, string p)
 int main()
 {
     cout << "---Solution Call---" << endl;
-    JZ20Solution test;
-    test.isNumeric2("+1");
+    JZ62Solution test;
+    test.LastRemaining_Solution2(5,3);
     return 0;
 }

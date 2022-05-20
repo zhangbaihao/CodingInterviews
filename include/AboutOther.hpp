@@ -1,42 +1,16 @@
 ﻿#include "Util.h"
 // JZ66 构建乘积数组
+
 class JZ66Solution
 {
 public:
     //[1,2,3,4,5] [120,60,40,30,24] 120 = 2*3*4*5 60 = 1*3*4*5
+    /*
+    给定一个数组 A[0,1,...,n-1] ,请构建一个数组 B[0,1,...,n-1] ,其中 B 的元素 B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]
+    （除 A[i] 以外的全部元素的的乘积）。程序中不能使用除法。
+    （注意：规定 B[0] = A[1] * A[2] * ... * A[n-1]，B[n-1] = A[0] * A[1] * ... * A[n-2]）
+    */
     vector<int> multiply(const vector<int> &A)
-    {
-        vector<int> res;
-        int size = A.size();
-        int sum = 1;
-        int count = 0;
-        for (int i = 0; i < size; i++)
-        {
-            if (A[i] == 0)
-                count++;
-            else
-                sum *= A[i];
-        }
-        for (int i = 0; i < size; i++)
-        {
-            if (count >= 2 || (count == 1 && A[i] != 0))
-                res.push_back(0);
-            else
-            {
-                if (A[i] == 0)
-                {
-                    res.push_back(sum);
-                }
-                else
-                {
-                    res.push_back(sum / A[i]);
-                }
-            }
-        }
-        return res;
-    }
-
-    vector<int> multiply2(const vector<int> &A)
     {
         //初始化数组B
         vector<int> B(A.size(), 1);
@@ -172,6 +146,48 @@ public:
         }
         return sum;
     }
+    int NumberOf1Between1AndN_Solution2(int n)
+    {
+        int res = 0;
+        // MulBase = 10^i
+        long long MulBase = 1;
+        //每个 十 百 千位数按照公式计算
+        for (int i = 0; MulBase <= n; i++)
+        {
+            //根据公式添加 12345 假设计算到十位上的1
+            // left= 4左边为123 123*10
+            int left = n / (MulBase * 10) * MulBase;
+            // right 如果 18<19则00010-00018 8-0+1总共9 如果45>19 123前缀去掉，即10-19=10
+            int right = min(max(n % (MulBase * 10) - MulBase + 1, (long long)0), MulBase);
+            res += left + right;
+            //扩大一位数
+            MulBase *= 10;
+        }
+        return res;
+    }
+    int NumberOf1Between1AndN_Solution3(int n)
+    {
+        int res = 0;
+        long long k = 1;
+        for (int i = 0; k <= n; i++)
+        {
+            int left = n / (k * 10) * k;
+            int right = 0;
+            if (n % (k * 10) > k * 2 - 1)
+            {
+                right = k;
+            }
+            else
+            {
+                right = n % (k * 10) - k + 1;
+                if (right < 0)
+                    right = 0;
+            }
+            res += left + right;
+            k *= 10;
+        }
+        return res;
+    }
 };
 // JZ45 把数组排成最小的数
 class JZ45Solution
@@ -201,6 +217,7 @@ public:
         return res;
     }
 };
+
 // JZ49 丑数
 //丑数是指不能被2，3，5以外的其他素数整除的数
 /*把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，
@@ -239,22 +256,15 @@ public: //数据范围：0<n≤100
     vector<vector<int>> FindContinuousSequence(int sum)
     {
         vector<vector<int>> array;
-        for (int i = 1; i <= sum; i++)
-        {
-            int s = 0;
-            vector<int> v;
-            for (int j = i; j < 100; j++)
-            {
-                s = s + j;
-                v.push_back(j);
-                if (s == sum)
-                {
-                    if (v.size() > 1)
-                        array.push_back(v);
-                    break;
-                }
-                else if (s > sum)
-                {
+        for(int i=1;i<sum;i++){
+            int res = 0;
+             vector<int> a;
+            for(int j=i;j<sum;j++){
+                res += j;
+                a.push_back(j);
+                if(res == sum){
+                    array.push_back(a);                    
+                }else if(res>sum){
                     break;
                 }
             }
@@ -262,7 +272,7 @@ public: //数据范围：0<n≤100
         return array;
     }
 };
-// JZ57 和为S的两个数字
+// JZ57 升序数组array 和为sum的两个数字
 class JZ57Solution
 {
 public: /*输入：[1,2,3,4],5
@@ -373,19 +383,19 @@ public:
         }
         return last;
     }
-    int LastRemaining_Solution2(int n, int m)
-    {
-        if (n <= 0 || m <= 0)
+    int function(int n, int m) {
+        if (n == 1)  
+            return 0;
+        //递归
+        int x = function(n - 1, m);
+        //返回最后删除的那个元素
+        return (m + x) % n;  
+    }
+    int LastRemaining_Solution2(int n, int m) {
+        //没有小朋友的情况
+        if(n == 0 || m == 0) 
             return -1;
-        // N=1时剩余小孩的新序号一定是0
-        int last = 0;
-        //反推回去
-        //公式f(n)=(f(n-1)+m)%n,f(1)=0
-        for (int i = 2; i <= n; i++)
-        {
-            last = (last + m) % i;
-        }
-        return last;
+        return function(n, m);
     }
 };
 // JZ75 字符流中第一个不重复的字符
@@ -452,92 +462,108 @@ public:
         return dp[number];
     }
 };
-//JZ81 调整数组顺序使奇数位于偶数前面(二)
-class JZ81Solution {
+// JZ81 调整数组顺序使奇数位于偶数前面(二)
+class JZ81Solution
+{
 public:
-    vector<int> reOrderArrayTwo(vector<int>& array) {
+    vector<int> reOrderArrayTwo(vector<int> &array)
+    {
         // write code here
         //奇数以及最后结果
         vector<int> anOddNumber;
         vector<int> anEvenNumber;
         int size = array.size();
-        for(int i=0;i<size;i++){
-            if(array[i]%2 == 0){
+        for (int i = 0; i < size; i++)
+        {
+            if (array[i] % 2 == 0)
+            {
                 anEvenNumber.push_back(array[i]);
-            }else{
+            }
+            else
+            {
                 anOddNumber.push_back(array[i]);
             }
         }
-        for(int i=0;i<anEvenNumber.size();i++)
+        for (int i = 0; i < anEvenNumber.size(); i++)
             anOddNumber.push_back(anEvenNumber[i]);
         return anOddNumber;
     }
 };
-//JZ83 剪绳子（进阶版）
-class JZ83Solution {
+// JZ83 剪绳子（进阶版）
+class JZ83Solution
+{
 public:
     long long mod = 998244353;
     //快速乘法 5*7= 5*(0000 0111) = 5*（4+2+1）
-    long long fast(long long x, long long y){ 
+    long long fast(long long x, long long y)
+    {
         long long res = 0;
         x %= mod;
         y %= mod;
-        while(y){
-            if(y & 1){
+        while (y)
+        {
+            if (y & 1)
+            {
                 //加法代替乘法，防止越界
-                res += x; 
-                if(res >= mod)
+                res += x;
+                if (res >= mod)
                     res -= mod;
             }
             y = y >> 1;
             x = x << 1;
-            if(x >= mod)
+            if (x >= mod)
                 x -= mod;
         }
         return res;
     }
-    //快速幂 7的二进制 0000 0111   5的7次方 = 5*(5*5)*(5*5*5*5) 
-    long long Pow(long long x, long long y){ 
+    //快速幂 7的二进制 0000 0111   5的7次方 = 5*(5*5)*(5*5*5*5)
+    long long Pow(long long x, long long y)
+    {
         long long res = 1;
-        while(y){
+        while (y)
+        {
             //可以再往上乘一个
-            if(y & 1) 
+            if (y & 1)
                 res = fast(res, x);
             //叠加
-            x = fast(x, x); 
+            x = fast(x, x);
             //减少乘次数
-            y = y >> 1; 
+            y = y >> 1;
         }
         return res;
     }
-    long long cutRope(long long number) {
+    long long cutRope(long long number)
+    {
         //不超过3直接计算
-        if(number <= 3) 
+        if (number <= 3)
             return number - 1;
         //能整除3
-        if(number % 3 == 0) 
+        if (number % 3 == 0)
             return Pow(3, number / 3);
         //最后剩余1
-        else if(number % 3 == 1) 
-            //4*3^{n-1}
-            return fast(Pow(3, number / 3 - 1), 4); 
+        else if (number % 3 == 1)
+            // 4*3^{n-1}
+            return fast(Pow(3, number / 3 - 1), 4);
         //最后剩余2
-        else 
-            //2*3^n
-            return fast(Pow(3, number / 3), 2); 
+        else
+            // 2*3^n
+            return fast(Pow(3, number / 3), 2);
     }
 };
 
-//JZ17 打印从1到最大的n位数
-class JZ17Solution {
+// JZ17 打印从1到最大的n位数
+class JZ17Solution
+{
 public:
-    vector<int> printNumbers(int n) {
+    vector<int> printNumbers(int n)
+    {
         // write code here
         int max = 1;
-        for(int i = 0;i<n;i++)
-            max = max*10;
+        for (int i = 0; i < n; i++)
+            max = max * 10;
         vector<int> res;
-        for(int i=1;i<max;i++){
+        for (int i = 1; i < max; i++)
+        {
             res.push_back(i);
         }
         return res;
